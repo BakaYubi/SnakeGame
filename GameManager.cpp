@@ -40,6 +40,32 @@ void CGameManager::init(CGameMap * map, CSnake * snake)
 
 void CGameManager::checkCollision()
 {
+	for (int tNum = 1; tNum < m_snake->getTails()->getCount(); tNum++)
+	{
+		if (m_snake->getTails()->getObject(0)->getX() == m_snake->getTails()->getObject(tNum)->getX() && m_snake->getTails()->getObject(0)->getY() == m_snake->getTails()->getObject(tNum)->getY())
+		{
+			m_isGameOver = true;
+		}
+	}
+
+	if(m_snake->getTails()->getObject(0)->getX() == m_item->getX() && m_snake->getTails()->getObject(0)->getY() == m_item->getY())
+	{
+		delete m_item;
+
+		int width = m_gameMap->getWidth();
+		int height = m_gameMap->getHeight();
+		int x = 1 + rand() % (width - 2);
+		int y = 1 + rand() % (height - 2);
+		m_item = new CItem(x, y);
+
+		CGameObject *snakeBody = new CTail(m_snake->getTails()->getObject(0)->getX(), m_snake->getTails()->getObject(0)->getY());
+		m_snake->getTails()->pushTail(snakeBody);
+	}
+
+	if(m_snake->getTails()->getObject(0)->getX() == 0 || m_snake->getTails()->getObject(0)->getX() == m_gameMap->getWidth()-1|| m_snake->getTails()->getObject(0)->getY() == 0 || m_snake->getTails()->getObject(0)->getY() == m_gameMap->getHeight()-1)
+	{
+		m_isGameOver = true;
+	}	
 }
 
 void CGameManager::updateGame()
